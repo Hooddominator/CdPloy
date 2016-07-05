@@ -1,0 +1,33 @@
+---
+# This playbook deploys the whole elk-stack
+
+# Configure and deploy es servers.
+- hosts: pi*
+  become: yes
+  tasks:
+  - name: load custom es-install script
+    get_url: url=https://raw.githubusercontent.com/Hooddominator/share/master/es_install.sh dest=/tmp/es_install.sh mode=0755
+  - name: execute es-install script
+    shell: /tmp/es_install.sh
+
+- hosts: pi6
+  become: yes
+  tasks:
+  - name: define es-master
+    lineinfile: dest=/usr/share/elasticsearch/config/elasticsearch.yml regexp=^node\.master line=node.master:true
+  - name: restart master es-service
+    supervisorctl: name=elasticsearch state=started
+
+- hosts: pi0
+  become: yes
+  tasks:
+  - name: define es-node-client
+    lineinfile: dest=/usr/share/elasticsearch/config/elasticsearch.yml regexp=^node\.data line=node.data:false
+  - name: install HQ-Plugin
+    elasticsearch_plugin: state=present name="royrusso/elasticsearch-HQ"
+  - name: restart es-node-client
+    supervisorctl: name=elasticsearch state=started
+  - name: load custom logstash-install script
+    get_url: url=https://raw.githubusercontent.com/Hooddominator/share/master/logstash_install.sh dest=/tmp/logstash_install.sh mode=0755
+  - name: execute logstash-install script
+    shell: /tmp/logstash_install.sh

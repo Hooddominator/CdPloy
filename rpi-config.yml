@@ -1,0 +1,22 @@
+---
+- hosts: pi*
+  vars:
+    raspi_config_timezone: "Europe/Berlin"
+    raspi_config_hostname: "{{ ansible_hostname }}" 
+    raspi_config_replace_user:
+      name: "pi"
+      path_to_ssh_key: "/home/pi/clusterkey"
+  become: yes
+  become_user: root
+  become_method: sudo
+  vars_files:
+    - vars/main.yml
+  roles:
+    - {role: mikolak.raspi-config}
+  tasks:
+    - name: authorized_key spreading
+      authorized_key: user=pi key="{{ lookup('file', '/home/pi/clusterkey/id_rsa.pub') }}"
+    - name: apt update
+      action: apt update_cache=yes cache_valid_time=3600
+    - name: apt upgrade
+      action: apt upgrade=dist force=yes
