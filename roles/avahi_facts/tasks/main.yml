@@ -1,6 +1,0 @@
----
-- name: Packages required for avahi-browse
-  apt: name=avahi-utils state=present
-
-- name: Gather avahi facts
-  avahi_facts:
