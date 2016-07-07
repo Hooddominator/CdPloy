@@ -2,13 +2,19 @@
 # This playbook deploys the whole elk-stack
 
 # Configure and deploy es servers.
+#- hosts: pi*
+#  become: yes
+#  tasks:
+#  - name: load custom es-install script
+#    get_url: url=https://raw.githubusercontent.com/Hooddominator/share/master/es_install.sh dest=/tmp/es_install.sh mode=0755
+#  - name: execute es-install script
+#    shell: /tmp/es_install.sh
+
 - hosts: pi*
   become: yes
-  tasks:
-  - name: load custom es-install script
-    get_url: url=https://raw.githubusercontent.com/Hooddominator/share/master/es_install.sh dest=/tmp/es_install.sh mode=0755
-  - name: execute es-install script
-    shell: /tmp/es_install.sh
+  roles:
+    - { role: geerlingguy.java }
+    - { role: geerlingguy.elasticsearch }
 
 - hosts: pi6
   become: yes
