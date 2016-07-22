@@ -28,7 +28,7 @@
   become: yes
   tasks:
   - name: define es-node-client
-    lineinfile: dest=/usr/share/elasticsearch/config/elasticsearch.yml regexp=^node\.data line="node.data: false"
+    lineinfile: dest=/usr/share/elasticsearch/config/elasticsearch.yml regexp=^node\.data line="node.data{{':'}} false"
   - name: install HQ-Plugin
     elasticsearch_plugin: state=present name="royrusso/elasticsearch-HQ"
   - name: restart es-node-client
