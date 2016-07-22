@@ -37,3 +37,11 @@
     get_url: url=https://raw.githubusercontent.com/Hooddominator/share/master/logstash_install.sh dest=/tmp/logstash_install.sh mode=0755
   - name: execute logstash-install script
     shell: /tmp/logstash_install.sh
+
+- hosts: pi5
+  become: yes
+  tasks:
+  - name: load custom kibana-install script
+    get_url: url=https://raw.githubusercontent.com/Hooddominator/share/master/kibana_install.sh dest=/tmp/kibana_install.sh mode=0755
+  - name: execute kibana-install script
+    shell: /tmp/kibana_install.sh
